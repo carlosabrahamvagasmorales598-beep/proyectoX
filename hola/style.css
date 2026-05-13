@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    animation: cambioFondo 15s infinite;
+}
+
+@keyframes cambioFondo {
+    0% { background-color: red; }
+    25% { background-color: grey; }
+    50% { background-color: black; color: white; }
+    75% { background-color: blue; }
+    90% { background-color: purple; }
+    100% { background-color: red; }
+}
+
+#anuncio {
+    position: absolute;
+    top: 0;
+    font-size: 24px;
+    font-weight: bold;
+    background: yellow;
+    color: black;
+    width: 100%;
+    text-align: center;
+}
+
+#estrella {
+    position: fixed;
+    font-size: 30px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.particula {
+    position: fixed;
+    font-size: 14px;
+    color: lime;
+    pointer-events: none;
+    animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(20px); }
+}
+
+.btn-link, .btn-bd, #btn-gravedad {
+    padding: 15px 30px;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 9px #1565C0;
+    transition: all 0.2s ease;
+    position: relative;
+    outline: none;
+}
+
+.btn-link:hover, .btn-bd:hover, #btn-gravedad:hover {
+    background-color: #1E88E5;
+}
+
+.btn-link:active, .btn-bd:active, #btn-gravedad:active {
+    box-shadow: 0 5px #1565C0;
+    transform: translateY(4px);
+}
+
+/* ESTILO PARA EL REPRODUCTOR */
+#contenedor-musica {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 15px;
+    z-index: 10;
+}
+
+.flotando {
+    position: absolute !important;
+    transition: all 5s ease-in-out;
+    animation: flotar 3s infinite alternate;
+}
+
+@keyframes flotar {
+    from { transform: translateY(0) rotate(0deg); }
+    to { transform: translateY(-100px) rotate(20deg); }
+}

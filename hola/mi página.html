@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ño mañana - Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <marquee id="anuncio">¡PORQUE AY TERIYANS!</marquee>
+
+    <h1 id="titulo" class="elemento-gravedad">Ño mañana</h1>
+
+    <div id="vistas" class="elemento-gravedad">Visitas: <span id="contador">0</span></div>
+
+    <div id="contenedor-botones">
+        <button class="btn-link elemento-gravedad" onclick="window.open('https://poki.com')">Poki</button>
+        <button class="btn-link elemento-gravedad" onclick="window.open('https://chemistry-en.nobook.com')">Chemistry</button>
+        <button class="btn-link elemento-gravedad" onclick="window.open('https://google.com')">Google</button>
+    </div>
+
+    <button class="btn-bd elemento-gravedad" onclick="window.open('https://drive.google.com/file/d/1osubXHlc-B95nIOZfUguZsbZ-F6mMvH3/view?usp=sharing')">Mi Base de Datos</button>
+
+    <div id="contenedor-musica" class="elemento-gravedad">
+        <p style="color: white; font-size: 14px;">Reproductor de Música:</p>
+        <audio id="miMusica" controls>
+            <source src="Music.html.m4a">
+            Tu navegador no soporta el audio.
+        </audio>
+    </div>
+
+    <button id="btn-gravedad" onclick="activarGravedad()">Gravedad Cero</button>
+
+    <div id="estrella">⭐</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
