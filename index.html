@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taquería Doña Mari - Pedidos Inteligentes</title>
+    <style>
+        :root {
+            --naranja-fuerte: #d35400;
+            --fondo: #ffb366; 
+            --sombra-oscura: #d99857;
+            --sombra-clara: #ffce95;
+            --texto-principal: #2d1a00; 
+        }
+
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--fondo); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center;
+            color: var(--texto-principal);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><text x='20' y='50' font-size='32' style='filter: grayscale(100%); opacity: 0.15;'>🌮</text></svg>");
+            background-repeat: repeat;
+            z-index: -1; 
+            animation: moverTacos 25s linear infinite; 
+            pointer-events: none; 
+        }
+
+        @keyframes moverTacos {
+            from { background-position: 0 0; }
+            to { background-position: 80px 80px; }
+        }
+
+        .main-container { 
+            max-width: 800px; 
+            width: 80%; 
+            margin: 40px auto; 
+            padding: 40px; 
+            background: var(--fondo); 
+            border-radius: 50px; 
+            box-shadow: 25px 25px 50px var(--sombra-oscura), -25px -25px 50px var(--sombra-clara);
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1; 
+        }
+
+        #seccion-pedidos { display: none; }
+
+        h1, h2, h3 { 
+            color: var(--texto-principal); 
+            text-shadow: 2px 2px 0px var(--sombra-clara);
+            text-transform: uppercase;
+        }
+
+        .logo { 
+            width: 200px; 
+            height: 200px; 
+            border-radius: 50%; 
+            border: 10px solid var(--fondo);
+            box-shadow: 12px 12px 25px var(--sombra-oscura), -12px -12px 25px var(--sombra-clara);
+            margin-bottom: 30px;
+        }
+
+        .banner-menu { 
+            width: 100%; 
+            border-radius: 30px; 
+            box-shadow: 8px 8px 16px var(--sombra-oscura);
+            margin-bottom: 30px;
+        }
+
+        .fila-pedido { 
+            display: flex; 
+            gap: 20px; 
+            background: var(--fondo); 
+            padding: 20px; 
+            margin-bottom: 25px; 
+            border-radius: 25px; 
+            box-shadow: inset 8px 8px 16px var(--sombra-oscura), inset -8px -8px 16px var(--sombra-clara);
+        }
+
+        select, input { 
+            border: none;
+            background: var(--fondo);
+            padding: 15px; 
+            border-radius: 15px; 
+            font-size: 18px; 
+            box-shadow: 5px 5px 10px var(--sombra-oscura), -5px -5px 10px var(--sombra-clara);
+            outline: none;
+            color: var(--texto-principal);
+            font-weight: 800;
+            box-sizing: border-box;
+        }
+
+        .btn { 
+            border: none; 
+            padding: 20px 40px; 
+            border-radius: 25px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            text-transform: uppercase;
+            background: var(--fondo);
+            color: var(--texto-principal);
+            font-size: 1.1em;
+            box-shadow: 8px 8px 16px var(--sombra-oscura), -8px -8px 16px var(--sombra-clara);
+        }
+
+        .btn:active { box-shadow: inset 5px 5px 10px var(--sombra-oscura), inset -5px -5px 10px var(--sombra-clara); }
+
+        .btn-whatsapp { 
+            background: #25d366 !important; 
+            color: white !important; 
+            width: 100%; 
+            font-size: 1.4em; 
+            margin-top: 35px;
+            box-shadow: 8px 8px 16px #b37d47 !important;
+        }
+
+        .entrega-box {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 25px;
+            box-shadow: inset 8px 8px 16px var(--sombra-oscura), inset -8px -8px 16px var(--sombra-clara);
+        }
+
+        #detalle-domicilio, #detalle-paso { display: none; margin-top: 20px; }
+
+        .radio-option { 
+            cursor: pointer; 
+            font-size: 1.2em; 
+            font-weight: 900; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; box-sizing: border-box; }
+            .main-container { width: 100%; margin: 10px auto; padding: 20px 15px; border-radius: 35px; box-shadow: 15px 15px 30px var(--sombra-oscura), -15px -15px 30px var(--sombra-clara); }
+            h1 { font-size: 1.6em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            .logo { width: 130px; height: 130px; border-width: 6px; margin-bottom: 15px; }
+            .fila-pedido { flex-direction: column; gap: 15px; padding: 15px; border-radius: 20px; align-items: center; }
+            select.carne-select { width: 100% !important; font-size: 15px; text-align: center; }
+            input.cantidad-input { width: 60% !important; text-align: center; }
+            #codigoInput { width: 90% !important; }
+            .btn { padding: 15px 20px; font-size: 0.95em; width: 100%; box-sizing: border-box; }
+            .btn-whatsapp { font-size: 1.1em; padding: 16px 10px; }
+            .entrega-box { flex-direction: column; gap: 20px; align-items: center; padding: 20px 15px; }
+            .radio-option { font-size: 1.1em; width: 100%; justify-content: center; }
+            #input-domicilio, #input-paso, #notas { width: 100% !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container" id="pantalla-acceso">
+        <img src="logo.png.jpeg" class="logo">
+        <h1>¡BIENVENIDOS!</h1>
+        <p>INTRODUCE TU CÓDIGO PARA ORDENAR:</p>
+        <input type="text" id="codigoInput" placeholder="CÓDIGO AQUÍ" style="width: 60%; text-align: center;">
+        <br><br>
+        <button class="btn" onclick="verificarCodigo()">ENTRAR AL MENÚ</button>
+    </div>
+
+    <div class="main-container" id="seccion-pedidos">
+        <img src="menu.png.jpeg" class="banner-menu">
+        <h2>ARMA TU PEDIDO 🌮</h2>
+        
+        <div id="lista-dinamica">
+            <div class="fila-pedido">
+                <select class="carne-select" style="flex: 3;">
+                    <option value="">¿QUÉ CARNE PREFIERES? 👇</option>
+                    <option value="Bistec">BISTEC ($15)</option>
+                    <option value="Longaniza">LONGANIZA ($15)</option>
+                    <option value="Enchilada">ENCHILADA ($15)</option>
+                    <option value="Sesos">SESOS ($15)</option>
+                    <option value="Suadero">SUADERO ($15)</option>
+                    <option value="Campechanos">CAMPECHANOS ($15)</option>
+                </select>
+                <input type="number" class="cantidad-input" value="1" min="1" style="flex: 1;">
+            </div>
+        </div>
+
+        <button class="btn" style="font-size: 0.8em; background: #555; color: white;" onclick="agregarFila()">+ AGREGAR MÁS TACOS</button>
+
+        <h3 style="margin-top: 30px;">¿CÓMO TE LOS ENTREGAMOS?</h3>
+        <div class="entrega-box">
+            <label class="radio-option">
+                <input type="radio" name="entrega" value="Domicilio" onclick="mostrarDetalle('domicilio')"> A DOMICILIO
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="entrega" value="Pasar" onclick="mostrarDetalle('paso')"> PASO POR ELLOS
+            </label>
+        </div>
+
+        <div id="detalle-domicilio">
+            <p>¿A DÓNDE LOS LLEVAMOS? (Casa de Panchita, por la tienda, en el puente...)</p>
+            <input type="text" id="input-domicilio" placeholder="DIRECCIÓN O REFERENCIA" style="width: 90%;">
+        </div>
+
+        <div id="detalle-paso">
+            <p>¿EN QUÉ VIENES O DÓNDE TE VEMOS? (Carro, colectiva, salgo a los 33...)</p>
+            <input type="text" id="input-paso" placeholder="EJ: VOY EN CARRO GRIS" style="width: 90%;">
+        </div>
+
+        <p style="margin-top: 20px;">NOTAS ADICIONALES:</p>
+        <input type="text" id="notas" placeholder="SIN CEBOLLA, CON SALSA, ETC..." style="width: 90%;">
+        
+        <button class="btn btn-whatsapp" onclick="procesarPedido()">ENVIAR PEDIDO A DOÑA MARI 🚀</button>
+    </div>
+
+    <script>
+        const PRECIO_TACO = 15;
+
+        // Criterio de validación de acceso
+        function verificarCodigo() {
+            const codigoCorrecto = "MARI2026";
+            if (document.getElementById('codigoInput').value.toUpperCase() === codigoCorrecto) {
+                document.getElementById('pantalla-acceso').style.display = 'none';
+                document.getElementById('seccion-pedidos').style.display = 'block';
+            } else {
+                alert("Código incorrecto.");
+            }
+        }
+
+        function mostrarDetalle(tipo) {
+            document.getElementById('detalle-domicilio').style.display = (tipo === 'domicilio') ? 'block' : 'none';
+            document.getElementById('detalle-paso').style.display = (tipo === 'paso') ? 'block' : 'none';
+        }
+
+        function agregarFila() {
+            const lista = document.getElementById('lista-dinamica');
+            const nuevaFila = document.createElement('div');
+            nuevaFila.className = 'fila-pedido';
+            nuevaFila.innerHTML = `
+                <select class="carne-select" style="flex: 3;">
+                    <option value="">¿QUÉ CARNE PREFIERES? 👇</option>
+                    <option value="Bistec">BISTEC ($15)</option>
+                    <option value="Longaniza">LONGANIZA ($15)</option>
+                    <option value="Enchilada">ENCHILADA ($15)</option>
+                    <option value="Sesos">SESOS ($15)</option>
+                    <option value="Suadero">SUADERO ($15)</option>
+                    <option value="Campechanos">CAMPECHANOS ($15)</option>
+                </select>
+                <input type="number" class="cantidad-input" value="1" min="1" style="flex: 1;">
+            `;
+            lista.appendChild(nuevaFila);
+        }
+
+        async function procesarPedido() {
+            const numTel = "527752343981"; 
+            let textoWhatsApp = "Hola Doña Mari.\nEste es mi pedido:\n\n";
+            
+            const selecciones = document.querySelectorAll('.fila-pedido');
+            let hayAlgo = false;
+            let totalDinero = 0;
+            
+            // Arreglo ordenado para guardar de manera exacta en MongoDB Compass
+            let listaTacosMongo = [];
+
+            selecciones.forEach(fila => {
+                const carne = fila.querySelector('.carne-select').value;
+                const cant = parseInt(fila.querySelector('.cantidad-input').value) || 0;
+                
+                if (carne !== "") {
+                    let costoFila = PRECIO_TACO * cant;
+                    totalDinero += costoFila;
+                    
+                    textoWhatsApp += `- ${cant} taco(s) de ${carne}\n`;
+                    
+                    listaTacosMongo.push({
+                        tipo: carne,
+                        cantidad: cant,
+                        precioUnitario: PRECIO_TACO
+                    });
+                    
+                    hayAlgo = true;
+                }
+            });
+
+            if(!hayAlgo) {
+                alert("¡Selecciona tus tacos!");
+                return;
+            }
+
+            const entregaOpcion = document.querySelector('input[name="entrega"]:checked');
+            if (!entregaOpcion) {
+                alert("Por favor elige si es a domicilio o pasas por ellos.");
+                return;
+            }
+
+            const tipoEntrega = entregaOpcion.value;
+            let referencia = "";
+            if (tipoEntrega === "Domicilio") {
+                referencia = document.getElementById('input-domicilio').value;
+                textoWhatsApp += `\nENTREGA: A domicilio\nLUGAR: ${referencia || "No especificado"}`;
+            } else {
+                referencia = document.getElementById('input-paso').value;
+                textoWhatsApp += `\nENTREGA: Paso por ellos\nREFERENCIA: ${referencia || "No especificada"}`;
+            }
+
+            const notas = document.getElementById('notas').value;
+            if(notas) {
+                textoWhatsApp += `\nNOTAS: ${notas}`;
+            }
+            
+            textoWhatsApp += `\n\nTOTAL: $${totalDinero}`;
+
+            // --- CONEXIÓN DE INTERNET MEJORADA CON TU URL DE LOCALTUNNEL ---
+            try {
+                await fetch('https://eager-horses-wonder.loca.lt/nuevo-pedido', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Bypass-Tunnel-Reminder': 'true' // Salta el bloqueo azul de Localtunnel para peticiones fetch
+                    },
+                    body: JSON.stringify({
+                        tacos: listaTacosMongo,
+                        total: totalDinero,
+                        entrega: tipoEntrega,
+                        referencia: referencia || "Sin especificar",
+                        notas: notas || "Ninguna"
+                    })
+                });
+                console.log("¡Pedido enviado por internet y guardado en MongoDB con éxito!");
+            } catch (error) {
+                console.error("Error al conectar con el servidor backend por internet.", error);
+            }
+
+            // Abrir WhatsApp con el formato de siempre
+            const url = "https://wa.me/" + numTel + "?text=" + encodeURIComponent(textoWhatsApp);
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
