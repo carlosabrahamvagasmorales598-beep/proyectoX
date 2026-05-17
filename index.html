@@ -150,6 +150,37 @@
             gap: 10px;
         }
 
+        /* Botón de tuerca flotante para configuración de red */
+        .btn-config {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: var(--fondo);
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 4px 4px 10px var(--sombra-oscura), -4px -4px 10px var(--sombra-clara);
+            z-index: 100;
+        }
+
+        /* Cuadro de diálogo de configuración */
+        .modal-config {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--fondo);
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 15px 15px 30px var(--sombra-oscura), -15px -15px 30px var(--sombra-clara);
+            z-index: 101;
+            width: 90%;
+            max-width: 450px;
+        }
+
         @media (max-width: 600px) {
             body { padding: 10px; box-sizing: border-box; }
             .main-container { width: 100%; margin: 10px auto; padding: 20px 15px; border-radius: 35px; box-shadow: 15px 15px 30px var(--sombra-oscura), -15px -15px 30px var(--sombra-clara); }
@@ -170,6 +201,17 @@
     </style>
 </head>
 <body>
+
+    <button class="btn-config" onclick="abrirConfig()">⚙️</button>
+
+    <div class="modal-config" id="modalConfig">
+        <h3>Configurar Servidor</h3>
+        <p style="font-size: 14px;">Pega aquí el link que te dé Localtunnel hoy:</p>
+        <input type="text" id="inputUrlTunnel" value="https://eager-horses-wonder.loca.lt" style="width: 100%; font-size: 14px; text-align: center;">
+        <br><br>
+        <button class="btn" style="font-size: 14px; padding: 10px 20px;" onclick="guardarConfig()">GUARDAR LINK</button>
+        <button class="btn" style="font-size: 14px; padding: 10px 20px; background: #999;" onclick="cerrarConfig()">CERRAR</button>
+    </div>
 
     <div class="main-container" id="pantalla-acceso">
         <img src="logo.png.jpeg" class="logo">
@@ -230,7 +272,23 @@
     <script>
         const PRECIO_TACO = 15;
 
-        // Criterio de validación de acceso
+        // Cargar link guardado previamente si existe
+        if(localStorage.getItem('tunnelUrl')) {
+            document.getElementById('inputUrlTunnel').value = localStorage.getItem('tunnelUrl');
+        }
+
+        function abrirConfig() { document.getElementById('modalConfig').style.display = 'block'; }
+        function cerrarConfig() { document.getElementById('modalConfig').style.display = 'none'; }
+        
+        function guardarConfig() {
+            let url = document.getElementById('inputUrlTunnel').value.trim();
+            // Quitar diagonal final si la lleva para evitar errores de ruta
+            if(url.endsWith('/')) { url = url.slice(0, -1); }
+            localStorage.setItem('tunnelUrl', url);
+            alert("¡Link actualizado con éxito para esta sesión!");
+            cerrarConfig();
+        }
+
         function verificarCodigo() {
             const codigoCorrecto = "MARI2026";
             if (document.getElementById('codigoInput').value.toUpperCase() === codigoCorrecto) {
@@ -273,7 +331,6 @@
             let hayAlgo = false;
             let totalDinero = 0;
             
-            // Arreglo ordenado para guardar de manera exacta en MongoDB Compass
             let listaTacosMongo = [];
 
             selecciones.forEach(fila => {
@@ -324,13 +381,16 @@
             
             textoWhatsApp += `\n\nTOTAL: $${totalDinero}`;
 
-            // --- CONEXIÓN DE INTERNET MEJORADA CON TU URL DE LOCALTUNNEL ---
+            // --- LEER EL LINK DINÁMICO QUE TIENE CONFIGURADO EL BOTÓN ---
+            let urlBaseConfigurada = localStorage.getItem('tunnelUrl') || 'https://eager-horses-wonder.loca.lt';
+            let urlDestinoFinal = `${urlBaseConfigurada}/nuevo-pedido`;
+
             try {
-                await fetch('https://eager-horses-wonder.loca.lt/nuevo-pedido', {
+                await fetch(urlDestinoFinal, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
-                        'Bypass-Tunnel-Reminder': 'true' // Salta el bloqueo azul de Localtunnel para peticiones fetch
+                        'Bypass-Tunnel-Reminder': 'true'
                     },
                     body: JSON.stringify({
                         tacos: listaTacosMongo,
@@ -340,7 +400,7 @@
                         notas: notas || "Ninguna"
                     })
                 });
-                console.log("¡Pedido enviado por internet y guardado en MongoDB con éxito!");
+                console.log("¡Pedido enviado por internet y guardado en MongoDB!");
             } catch (error) {
                 console.error("Error al conectar con el servidor backend por internet.", error);
             }
